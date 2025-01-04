@@ -8,12 +8,12 @@ const jwt = Jwt;
 export const jwtService = {
 
     async createAccsessJWT(user: UserViewModel) {
-        const accessToken_JWT = await jwt.sign({ userId: user.id, userLogin: user.login }, SETTINGS.JWT_SECRET, { expiresIn: 10 })
+        const accessToken_JWT = await jwt.sign({ userId: user.id, userLogin: user.login }, SETTINGS.JWT_SECRET, { expiresIn: SETTINGS.ACCESSTOKEN_TTL })
         return accessToken_JWT
     },
 
     async createRefreshJWT(user: UserViewModel) {
-        const refreshToken_JWT = await jwt.sign({ userId: user.id, userLogin: user.login }, SETTINGS.JWT_SECRET, { expiresIn: 20 })
+        const refreshToken_JWT = await jwt.sign({ userId: user.id, userLogin: user.login }, SETTINGS.JWT_SECRET, { expiresIn: SETTINGS.REFRESHTOKEN_TTL })
         return refreshToken_JWT
     },
 
