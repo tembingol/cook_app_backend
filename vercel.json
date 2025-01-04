@@ -1,5 +1,5 @@
 {
-    "version": 3,
+    "version": 1,
     "name": "cook-app",
     "builds": [
        { "src": "/src/index.ts", "use": "@vercel/node" }
