@@ -9,12 +9,12 @@ export const authRouter = Router({})
 
 // simple logger for this router's requests
 // all requests to this router will first hit this middleware
-authRouter.use(function (req, res, next) {
-    console.log('authRouter Logger \n{--')
-    console.log('%s ,%s ,%s', req.method, req.body, req.baseUrl + req.url)
-    console.log('--}')
-    next()
-})
+// authRouter.use(function (req, res, next) {
+//     console.log('authRouter Logger \n{--')
+//     console.log('%s ,%s ,%s', req.method, req.body, req.baseUrl + req.url)
+//     console.log('--}')
+//     next()
+// })
 
 authRouter.post('/get-otp', async (req, res) => {
 

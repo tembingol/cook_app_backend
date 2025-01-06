@@ -1,8 +1,6 @@
 
 import nodemailer from 'nodemailer'
 import { SETTINGS } from '../settings';
-import { error } from 'console';
-import { randomInt } from 'crypto';
 
 export type MailOptions = {
     from: string
@@ -13,11 +11,11 @@ export type MailOptions = {
 }
 
 export const emailManager = {
- 
+
     async sendEmail(mailOptions: {}) {
 
         const transporter = nodemailer.createTransport({
-            host: SETTINGS.EMAILMANAGERHOST ,
+            host: SETTINGS.EMAILMANAGERHOST,
             port: Number(SETTINGS.EMAILMANAGERPORT),
             secure: true,
             auth: {
@@ -29,12 +27,16 @@ export const emailManager = {
             },
         });
 
-        transporter.sendMail(mailOptions).catch((error) => console.log(error));
+        transporter.sendMail(mailOptions)
+            .then((result) => {
+                console.log(result)
+            })
+            .catch((error) => console.log(error));
 
         return true
     },
 
-    async sendOTPCode(receiversArray: string[], confirmationCode: string){
+    async sendOTPCode(receiversArray: string[], confirmationCode: string) {
 
         const OTP = `${confirmationCode}`
         const emailText = `<h1>Welcome to Qus Cook App</h1> 

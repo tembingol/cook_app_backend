@@ -4,17 +4,17 @@ config() // добавление переменных из файла .env в pr
 
 export const SETTINGS = {
     // все хардкодные значения должны быть здесь, для удобства их изменения
-    PORT: process.env.PORT || 4004,
+    PORT: process.env.PORT || 5005,
     ADMIN_AUTH: process.env.ADMIN_AUTH || 'admin:qwerty',
     // MONGO_URL: process.env.MONGO_URL || 'mongodb://0.0.0.0:27017',
     MONGO_URL: process.env.MONGO_URL,
     DB_NAME: process.env.DB_NAME || 'qus_cook_app',
 
-    EMAILMANAGERLOGIN: process.env.EMAILMANAGERLOGIN || 'login',
-    EMAILMANAGERPASSWORD: process.env.EMAILMANAGERPASSWORD || 'password',
+    EMAILMANAGERLOGIN: process.env.EMAILMANAGERLOGIN,
+    EMAILMANAGERPASSWORD: process.env.EMAILMANAGERPASSWORD,
     EMAILMANAGERHOST: process.env.EMAILMANAGERHOST || 'smtp.mail.ru',
     EMAILMANAGERPORT: process.env.EMAILMANAGERPORT || 465,
-    
+
     USERS_COLLECTION_NAME: 'users',
     USERSCREDENTIALS_COLLECTION_NAME: 'usersCredentials',
     JWT_TOKENS_COLLECTION_NAME: 'jwt_tokens',
