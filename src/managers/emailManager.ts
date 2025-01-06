@@ -15,6 +15,7 @@ export const emailManager = {
     async sendEmail(mailOptions: {}) {
 
         const transporter = nodemailer.createTransport({
+            service: "Gmail",
             host: SETTINGS.EMAILMANAGERHOST,
             port: Number(SETTINGS.EMAILMANAGERPORT),
             secure: true,
