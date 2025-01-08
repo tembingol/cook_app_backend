@@ -28,6 +28,12 @@ export const emailManager = {
             // },
         });
 
+        console.log('transporter:', transporter);
+        console.log('transporter.options:', transporter.options);
+        if (transporter.hasOwnProperty('auth')) {
+            console.log('transporter.auth:', (transporter as any).auth);
+        }
+
         await new Promise((resolve, reject) => {
             // verify connection configuration
             transporter.verify(function (error: any, success: any) {
