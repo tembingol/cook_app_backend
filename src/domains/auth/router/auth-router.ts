@@ -26,6 +26,16 @@ authRouter.post('/get-otp', async (req, res) => {
     res.status(serviceRes.status).json(serviceRes.errors)
 })
 
+authRouter.post('/get-sms', async (req, res) => {
+
+    const serviceRes = await authService.getSMS(req.body)
+    if (serviceRes.result) {
+        res.status(serviceRes.status).json(serviceRes.data)
+        return
+    }
+    res.status(serviceRes.status).json(serviceRes.errors)
+})
+
 authRouter.post('/registration', ...authRegistrationValidators, async (req, res) => {
 
     const serviceRes = await authService.registerNewUser(req.body)

@@ -12,6 +12,7 @@ import { HTTP_STATUS_CODE } from "../../../input-output-types/types"
 
 import { usersQueryRepository } from "../../users/repositories/users-query-repo"
 import { randomInt } from "crypto"
+import { smsManager } from "../../../managers/smsManager"
 
 
 export const authService = {
@@ -60,7 +61,7 @@ export const authService = {
             return response
         }
         const DBuser = await usersQueryRepository.getUserById(foundUser.id)
-        
+
         if (DBuser?.emailConfirmation.confirmationCode === loginData.password) {
             await usersRepository.updateConfirmationCode(DBuser._id.toString(), "")
             response.result = true
@@ -68,6 +69,63 @@ export const authService = {
             response.data = foundUser
             return response
         }
+
+        return response
+    },
+
+    async getSMS(reqBody: any) {
+        const response: ServicesResponse = {
+            result: false,
+            status: HTTP_STATUS_CODE.BadRequest,
+            data: {},
+            errors: { errorsMessages: [] }
+        }
+
+        const confirmationCode = randomInt(1000, 9999).toString()
+        try {
+            const result = await smsManager.sendSMS(reqBody.login, `vash kod dostupa ${confirmationCode}`)
+        } catch (error) {
+            console.log(error)
+            response.errors.errorsMessages.push({ message: "sms sending error", field: "login" })
+        }
+
+        response.result = true
+        response.status = HTTP_STATUS_CODE.NoContent
+        return response
+        // if (!reqBody.login) {
+        //     response.errors.errorsMessages.push({ message: "login should be string", field: "login" })
+        //     return response
+        // }
+
+        // const isLoginEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(reqBody.login.trim())
+
+        // let DBUser = null
+
+        // if (isLoginEmail) {
+        //  DBUser = await await usersQueryRepository.getUserByEmail(reqBody.login)
+        // } else {
+        //  DBUser = await await usersQueryRepository.getUserByLogin(reqBody.login)
+        // }
+
+        // if (!DBUser) {
+        //     response.status = HTTP_STATUS_CODE.NotFound
+        //     response.errors.errorsMessages.push({ message: "user not found", field: "login" })
+        //     return response
+        // }
+
+        // const userLogin = isLoginEmail=== true ? reqBody.login : DBUser.email
+        // const confirmationCode = randomInt(1000, 9999).toString()
+
+        // const isEmailSended = await emailManager.sendOTPCode([userLogin], confirmationCode)
+
+        // const confirmResult = await usersRepository.updateConfirmationCode(DBUser._id.toString(), confirmationCode)
+
+        // if (!confirmResult) {
+        //     return response
+        // }
+
+        response.result = true
+        response.status = HTTP_STATUS_CODE.NoContent
 
         return response
     },
@@ -86,13 +144,13 @@ export const authService = {
         }
 
         const isLoginEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(reqBody.login.trim())
-        
+
         let DBUser = null
-        
+
         if (isLoginEmail) {
-         DBUser = await await usersQueryRepository.getUserByEmail(reqBody.login)
+            DBUser = await await usersQueryRepository.getUserByEmail(reqBody.login)
         } else {
-         DBUser = await await usersQueryRepository.getUserByLogin(reqBody.login)
+            DBUser = await await usersQueryRepository.getUserByLogin(reqBody.login)
         }
 
         if (!DBUser) {
@@ -101,7 +159,7 @@ export const authService = {
             return response
         }
 
-        const userLogin = isLoginEmail=== true ? reqBody.login : DBUser.email
+        const userLogin = isLoginEmail === true ? reqBody.login : DBUser.email
         const confirmationCode = randomInt(1000, 9999).toString()
 
         const isEmailSended = await emailManager.sendOTPCode([userLogin], confirmationCode)
@@ -111,7 +169,7 @@ export const authService = {
         if (!confirmResult) {
             return response
         }
-        
+
         response.result = true
         response.status = HTTP_STATUS_CODE.NoContent
 

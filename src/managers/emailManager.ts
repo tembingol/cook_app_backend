@@ -12,27 +12,47 @@ export type MailOptions = {
 
 export const emailManager = {
 
-    async sendEmail(mailOptions: {}) {
+    async sendEmail(mailData: {}) {
 
         const transporter = nodemailer.createTransport({
-            service: "Gmail",
-            host: SETTINGS.EMAILMANAGERHOST,
+            service: "gmail",
             port: Number(SETTINGS.EMAILMANAGERPORT),
+            host: SETTINGS.EMAILMANAGERHOST,
             secure: true,
             auth: {
                 user: SETTINGS.EMAILMANAGERLOGIN,
                 pass: SETTINGS.EMAILMANAGERPASSWORD,
             },
-            tls: {
-                rejectUnauthorized: false,
-            },
+            // tls: {
+            //     rejectUnauthorized: false,
+            // },
         });
 
-        transporter.sendMail(mailOptions)
-            .then((result) => {
-                console.log(result)
-            })
-            .catch((error) => console.log(error));
+        await new Promise((resolve, reject) => {
+            // verify connection configuration
+            transporter.verify(function (error: any, success: any) {
+                if (error) {
+                    console.log(error);
+                    reject(error);
+                } else {
+                    console.log("Server is ready to take our messages");
+                    resolve(success);
+                }
+            });
+        });
+
+        await new Promise((resolve, reject) => {
+            // send mail
+            transporter.sendMail(mailData, (err: any, info: any) => {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                } else {
+                    console.log(info);
+                    resolve(info);
+                }
+            });
+        });
 
         return true
     },
