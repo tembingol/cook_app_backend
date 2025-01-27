@@ -7,13 +7,15 @@ const jwt = Jwt;
 
 export const jwtService = {
 
+    //todo: add  expiresIn: '1d' from settings
     async createAccsessJWT(user: UserViewModel) {
-        const accessToken_JWT = await jwt.sign({ userId: user.id, userLogin: user.login }, SETTINGS.JWT_SECRET, { expiresIn: SETTINGS.ACCESSTOKEN_TTL })
+        const accessToken_JWT = await jwt.sign({ userId: user.id, userLogin: user.login }, SETTINGS.JWT_SECRET, { expiresIn: '1d' })
         return accessToken_JWT
     },
 
+    //todo: add  expiresIn: '1d' from settings
     async createRefreshJWT(user: UserViewModel) {
-        const refreshToken_JWT = await jwt.sign({ userId: user.id, userLogin: user.login }, SETTINGS.JWT_SECRET, { expiresIn: SETTINGS.REFRESHTOKEN_TTL })
+        const refreshToken_JWT = await jwt.sign({ userId: user.id, userLogin: user.login }, SETTINGS.JWT_SECRET, { expiresIn: '7d' })
         return refreshToken_JWT
     },
 

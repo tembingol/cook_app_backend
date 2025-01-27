@@ -23,13 +23,8 @@ export const emailManager = {
                 user: SETTINGS.EMAILMANAGERLOGIN,
                 pass: SETTINGS.EMAILMANAGERPASSWORD,
             },
-            // tls: {
-            //     rejectUnauthorized: false,
-            // },
         });
 
-        console.log('transporter:', transporter);
-        console.log('transporter.options:', transporter.options);
         if (transporter.hasOwnProperty('auth')) {
             console.log('transporter.auth:', (transporter as any).auth);
         }
