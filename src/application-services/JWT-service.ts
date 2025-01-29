@@ -61,5 +61,18 @@ export const jwtService = {
         return result
     },
 
+    async tokenVerify(token: string) {
+        if (token === '') {
+            return null
+        }
+        try {
+            const decoded = await jwt.verify(token, SETTINGS.JWT_SECRET)
+            return typeof decoded === 'object' ? { ...decoded } : null;
+        } catch (err) {
+            console.log('JWT is not valid ', token)
+        }
+        return null
+    },
+
 
 }

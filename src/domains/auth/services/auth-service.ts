@@ -325,6 +325,29 @@ export const authService = {
                 expirationDate: add(new Date(), { minutes: 1 }),
                 isConfirmed: false
             },
+            phone: "",
+            name: "",
+            password: "",
+            role: user.role,
+            address: {
+                address_preview: "",
+                coordinates: ""
+            },
+            info_client: {
+                people_to_cook_for: 0,
+                number_of_meals: 0,
+                kitchen: {
+                    count_burners: 0,
+                    count_cutting_boards: 0,
+                    count_pots: 0,
+                    count_frying_pans: 0,
+                    oven: false,
+                    blender: false
+                }
+            },
+            info_chef: {
+                name: ""
+            }
         }
 
         const salt = bcrypt.genSaltSync(10)

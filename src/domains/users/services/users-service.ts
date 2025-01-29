@@ -37,6 +37,14 @@ export const usersService = {
             response.errors.errorsMessages.push({ message: "not an email", field: "email" })
         }
 
+        if (!user.role) {
+            response.errors.errorsMessages.push({ message: "role should be string", field: "role" })
+        }
+
+        if (user.role[0] !== "client" && user.role[0] !== "chef") {
+            response.errors.errorsMessages.push({ message: "role should be client or chef", field: "role" })
+        }
+
         if (response.errors.errorsMessages.length > 0) {
             return response
         }
@@ -73,6 +81,29 @@ export const usersService = {
                 expirationDate: new Date(),
                 isConfirmed: false
             },
+            phone: "",
+            name: "",
+            password: "",
+            role: user.role,
+            address: {
+                address_preview: "",
+                coordinates: ""
+            },
+            info_client: {
+                people_to_cook_for: 0,
+                number_of_meals: 0,
+                kitchen: {
+                    count_burners: 0,
+                    count_cutting_boards: 0,
+                    count_pots: 0,
+                    count_frying_pans: 0,
+                    oven: false,
+                    blender: false
+                }
+            },
+            info_chef: {
+                name: ""
+            }
         }
 
         const salt = bcrypt.genSaltSync(10)
@@ -146,4 +177,43 @@ export const usersService = {
         return response
     },
 
+    updateUser: async function (userId: string, userInfo: UserViewModel) {
+        const response: ServicesResponseNew<UserViewModel | {}> = {
+            result: false,
+            status: HTTP_STATUS_CODE.NotFound,
+            data: {},
+            errors: { errorsMessages: [] }
+        }
+
+        const foundUser = await usersQueryRepository.getUserById(userId)
+
+        if (foundUser === null) {
+            return response
+        }
+
+        let isUserUpdated = false
+        try {
+            const userInfoToUpdate: UserViewModel = { ...userInfo }
+            isUserUpdated = await usersRepository.updateUser(userId, userInfoToUpdate)
+        } catch (error) {
+            console.log(error)
+            isUserUpdated = false
+        }
+
+        if (!isUserUpdated) {
+            response.status = HTTP_STATUS_CODE.BadRequest
+            return response
+        }
+
+        const updatedUser = await usersQueryRepository.getUserById(userId)
+
+        if (updatedUser === null) {
+            return response
+        }
+
+        response.result = true
+        response.data = userEntityMapper(updatedUser)
+
+        return response
+    },
 }

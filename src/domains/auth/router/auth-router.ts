@@ -7,15 +7,6 @@ import { authService } from "../services/auth-service"
 
 export const authRouter = Router({})
 
-// simple logger for this router's requests
-// all requests to this router will first hit this middleware
-// authRouter.use(function (req, res, next) {
-//     console.log('authRouter Logger \n{--')
-//     console.log('%s ,%s ,%s', req.method, req.body, req.baseUrl + req.url)
-//     console.log('--}')
-//     next()
-// })
-
 authRouter.post('/get-otp', async (req, res) => {
 
     const serviceRes = await authService.getOTP(req.body)
@@ -37,6 +28,10 @@ authRouter.post('/get-sms', async (req, res) => {
 })
 
 authRouter.post('/registration', ...authRegistrationValidators, async (req, res) => {
+
+    if (req.body.role === undefined) {
+        req.body.role = ["client"]
+    }
 
     const serviceRes = await authService.registerNewUser(req.body)
     if (serviceRes.result) {
@@ -139,29 +134,6 @@ authRouter.post('/refresh-token', async (req, res) => {
 
     res.cookie('refreshToken', newRefreshToken, { httpOnly: true, secure: true, })
     res.status(HTTP_STATUS_CODE.OK).send({ accessToken: accessToken })
-
-})
-
-authRouter.get('/login/me', async (req, res) => {
-
-    const authorization = req.headers['Authorization'.toLowerCase()]
-
-    if (authorization == undefined) {
-        res.sendStatus(HTTP_STATUS_CODE.Unauthorized)
-        return
-    }
-
-    const accessToken = authorization.slice(7)
-
-    const foundUser = await authService.getUserByToken(accessToken.toString())
-
-    if (foundUser === null) {
-        res.sendStatus(HTTP_STATUS_CODE.Unauthorized)
-        return
-    }
-
-    console.log(foundUser)
-    res.status(HTTP_STATUS_CODE.OK).send(foundUser)
 
 })
 

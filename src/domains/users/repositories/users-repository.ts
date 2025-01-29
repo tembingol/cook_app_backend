@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb"
 import { usersCollection, usersCredentialsCollection } from "../../../db/mongodb"
-import { UserCredentialsModel, UserDataBaseModel } from "../../../input-output-types/users-moduls"
+import { UserCredentialsModel, UserDataBaseModel, UserViewModel } from "../../../input-output-types/users-moduls"
 
 export const usersRepository = {
 
@@ -22,6 +22,12 @@ export const usersRepository = {
         //toDo transaction }
 
         return insertResult.insertedId.toString()
+    },
+
+    updateUser: async function (useriD: string, userInfo: UserViewModel) {
+        const filter = { _id: new ObjectId(useriD) }
+        const result = await usersCollection.updateOne(filter, { $set: userInfo })
+        return result.modifiedCount === 1
     },
 
     deleteUser: async function (useriD: string) {

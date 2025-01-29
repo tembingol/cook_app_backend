@@ -50,7 +50,30 @@ const responTest: ServicesResponseNew<UserViewModel> = {
         id: "",
         login: "",
         email: "",
-        createdAt: new Date()
+        createdAt: new Date(),
+        phone: "",
+        name: "",
+        password: "",
+        role: [],
+        address: {
+            address_preview: "",
+            coordinates: ""
+        },
+        info_client: {
+            people_to_cook_for: 0,
+            number_of_meals: 0,
+            kitchen: {
+                count_burners: 0,
+                count_cutting_boards: 0,
+                count_pots: 0,
+                count_frying_pans: 0,
+                oven: false,
+                blender: false
+            }
+        },
+        info_chef: {
+            name: ""
+        }
     },
     errors: {
         errorsMessages: []
